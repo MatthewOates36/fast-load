@@ -1,0 +1,78 @@
+plugins {
+    id 'maven-publish'
+}
+
+apply plugin: 'com.android.library'
+
+group = 'org.team11260'
+version = '0.1-beta1'
+
+android {
+    compileSdkVersion 33
+
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 28
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    namespace 'org.team11260.fastload'
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.firstinspires.ftc:FtcCommon:[8,9)'
+    implementation 'org.firstinspires.ftc:RobotCore:[8,9)'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            library(MavenPublication) {
+                groupId = 'org.team11260'
+                artifactId = 'fast-load'
+
+                from components.release
+
+                pom {
+                    name = 'FTC Fast Load Library'
+                    description = 'Custom classload to reload Team Code'
+                    licenses {
+                        license {
+                            name = 'MIT'
+                            url = 'https://spdx.org/licenses/MIT.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'matthewo'
+                            name = 'Matthew Oates'
+                            email = 'uni.oates@gmail.com'
+                        }
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                url = providers.gradleProperty('matthewo.publish.secret').get()
+            }
+        }
+    }
+}
