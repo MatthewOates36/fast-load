@@ -25,6 +25,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import dalvik.system.DexFile;
 
+/**
+ * Listens for the reload intent from the Gradle plugin and preforms the reload with the new bundle.
+ */
 @SuppressWarnings("unused")
 public class ReloadIntentListener {
 
@@ -50,6 +53,9 @@ public class ReloadIntentListener {
         AppUtil.getDefContext().unregisterReceiver(reloadReceiver);
     }
 
+    /**
+     * Preforms a reload of the new dex files then forces a rescan for annotations.
+     */
     private static void reloadFastLoadJar() {
         try {
             ClassManager classManager = ClassManager.getInstance();

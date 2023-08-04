@@ -2,6 +2,10 @@ package org.team11260.fastload;
 
 import dalvik.system.PathClassLoader;
 
+/**
+ * Custom class loader to use the fast load dex bundle to get TeamCode classes
+ * and prevent TeamCode classes from loading from the original APK.
+ */
 class TeamCodeClassLoader extends PathClassLoader {
 
     public TeamCodeClassLoader(String urls, ClassLoader parent) {
@@ -9,13 +13,14 @@ class TeamCodeClassLoader extends PathClassLoader {
     }
 
     public Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        // loads classes from the new dex first before looking in the APK
         Class<?> loadedClass = findLoadedClass(name);
         if (loadedClass == null) {
             try {
                 loadedClass = findClass(name);
             } catch (ClassNotFoundException e) {
                 if (name.contains("org.firstinspires.ftc.teamcode")) {
-                    // prevents classes that were deleted or renamed in fast load from being loaded from original apk
+                    // prevents classes that were deleted or renamed in fast load from being loaded from original APK
                     throw new ClassNotFoundException();
                 }
                 loadedClass = super.loadClass(name, resolve);
