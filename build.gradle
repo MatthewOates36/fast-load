@@ -71,7 +71,7 @@ afterEvaluate {
         }
         repositories {
             maven {
-                url = providers.gradleProperty('matthewo.publish.secret').get()
+                url = properties['matthewo.publish.secret'] ?: providers.gradleProperty('matthewo.publish.secret').get()
             }
         }
     }
