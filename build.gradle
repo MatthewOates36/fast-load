@@ -5,7 +5,7 @@ plugins {
 apply plugin: 'com.android.library'
 
 group = 'org.team11260'
-version = '0.1'
+version = '0.1.1'
 
 android {
     compileSdkVersion 33
@@ -37,8 +37,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.firstinspires.ftc:FtcCommon:[8,9)'
-    implementation 'org.firstinspires.ftc:RobotCore:[8,9)'
+    implementation 'org.firstinspires.ftc:FtcCommon:[8,9]'
+    implementation 'org.firstinspires.ftc:RobotCore:[8,9]'
 }
 
 afterEvaluate {
