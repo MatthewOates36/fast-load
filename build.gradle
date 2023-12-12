@@ -5,13 +5,13 @@ plugins {
 apply plugin: 'com.android.library'
 
 group = 'org.team11260'
-version = '0.1.1'
+version = '0.1.2-beta1'
 
 android {
     compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
     }
 
@@ -37,8 +37,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.firstinspires.ftc:FtcCommon:[8,9]'
-    implementation 'org.firstinspires.ftc:RobotCore:[8,9]'
+    implementation 'org.firstinspires.ftc:FtcCommon:[9.0, 10.0)'
+    implementation 'org.firstinspires.ftc:RobotCore:[9.0, 10.0)'
 }
 
 afterEvaluate {
