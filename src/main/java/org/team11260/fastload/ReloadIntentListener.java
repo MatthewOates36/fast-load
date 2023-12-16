@@ -60,12 +60,6 @@ public class ReloadIntentListener {
         try {
             ClassManager classManager = ClassManager.getInstance();
 
-            // allow a process all classes call to occur in the ClassManager
-            Field processAllClassesCalled = classManager.getClass().getDeclaredField("processAllClassesCalled");
-            processAllClassesCalled.setAccessible(true);
-            ((AtomicBoolean) Objects.requireNonNull(processAllClassesCalled.get(classManager))).set(false);
-            processAllClassesCalled.setAccessible(false);
-
             OnBotJavaHelper fastLoadHelper = new OnBotJavaHelper() {
 
                 private DexFile dexFile;
@@ -108,6 +102,12 @@ public class ReloadIntentListener {
             };
 
             classManager.setOnBotJavaClassHelper(fastLoadHelper);
+
+            // allow a process all classes call to occur in the ClassManager
+            Field processAllClassesCalled = classManager.getClass().getDeclaredField("processAllClassesCalled");
+            processAllClassesCalled.setAccessible(true);
+            ((AtomicBoolean) Objects.requireNonNull(processAllClassesCalled.get(classManager))).set(false);
+            processAllClassesCalled.setAccessible(false);
 
             classManager.processAllClasses();
 

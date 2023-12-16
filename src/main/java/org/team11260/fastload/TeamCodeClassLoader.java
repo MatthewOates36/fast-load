@@ -21,7 +21,7 @@ class TeamCodeClassLoader extends PathClassLoader {
             } catch (ClassNotFoundException e) {
                 if (name.contains("org.firstinspires.ftc.teamcode")) {
                     // prevents classes that were deleted or renamed in fast load from being loaded from original APK
-                    throw new ClassNotFoundException();
+                    return RemovedTeamCodeClass.class;
                 }
                 loadedClass = super.loadClass(name, resolve);
             }
@@ -30,5 +30,12 @@ class TeamCodeClassLoader extends PathClassLoader {
             resolveClass(loadedClass);
         }
         return loadedClass;
+    }
+
+    /**
+     * Placeholder class for team code classes removed in a fast load
+     */
+    private static final class RemovedTeamCodeClass {
+
     }
 }
