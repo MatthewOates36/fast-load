@@ -81,7 +81,7 @@ public class ReloadIntentListener {
                 @Override
                 public ClassLoader createOnBotJavaClassLoader() {
                     // new classloader will be used by ClassManager to load items from the fast load jar
-                    return new TeamCodeClassLoader(FAST_LOAD_JAR.getPath(), this.getClass().getClassLoader());
+                    return new TeamCodeClassLoader(FAST_LOAD_JAR.getPath(), ReloadIntentListener.class.getClassLoader());
                 }
 
                 @Override
