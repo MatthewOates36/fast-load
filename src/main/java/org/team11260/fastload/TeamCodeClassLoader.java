@@ -11,15 +11,12 @@ import java.util.List;
  */
 class TeamCodeClassLoader extends PathClassLoader {
 
-    private final List<String> ignoredAnnotations = List.of(
+    private final List<String> IGNORED_ANNOTATIONS = List.of(
             "com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType"
     );
 
-    private final ClassLoader parent;
-
-    public TeamCodeClassLoader(String urls, ClassLoader parent) {
-        super(urls, parent);
-        this.parent = parent;
+    public TeamCodeClassLoader(String urls, ClassLoader defaultClassLoader) {
+        super(urls, defaultClassLoader);
     }
 
     public Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
@@ -27,10 +24,11 @@ class TeamCodeClassLoader extends PathClassLoader {
         Class<?> loadedClass = findLoadedClass(name);
         if (null == loadedClass) {
             try {
-                loadedClass = findClass(name);
-                if (!shouldFastLoadClass(loadedClass)) {
-                    return parent.loadClass(name);
+                Class<?> defaultClass = getParent().loadClass(name);
+                if (!shouldFastLoadClass(defaultClass)) {
+                    return defaultClass;
                 }
+                loadedClass = findClass(name);
             } catch (ClassNotFoundException e) {
                 if (name.contains("org.firstinspires.ftc.teamcode")) {
                     // prevents classes that were deleted or renamed in fast load from being loaded from original APK
@@ -47,9 +45,8 @@ class TeamCodeClassLoader extends PathClassLoader {
 
     private boolean shouldFastLoadClass(Class<?> loadedClass) {
         for (Annotation annotation : loadedClass.getAnnotations()) {
-            for (String ignored : ignoredAnnotations) {
+            for (String ignored : IGNORED_ANNOTATIONS) {
                 if (annotation.annotationType().getName().contains(ignored)) {
-                    System.out.println("Ignored TeamCode class: " + loadedClass);
                     return false;
                 }
             }
