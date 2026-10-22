@@ -11,7 +11,7 @@ import java.util.List;
  */
 class TeamCodeClassLoader extends PathClassLoader {
 
-    private final List<String> IGNORED_ANNOTATIONS = List.of(
+    private static final List<String> IGNORED_ANNOTATIONS = List.of(
             "com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType"
     );
 
@@ -43,11 +43,16 @@ class TeamCodeClassLoader extends PathClassLoader {
         return loadedClass;
     }
 
-    private boolean shouldFastLoadClass(Class<?> loadedClass) {
-        for (Annotation annotation : loadedClass.getAnnotations()) {
-            for (String ignored : IGNORED_ANNOTATIONS) {
-                if (annotation.annotationType().getName().contains(ignored)) {
-                    return false;
+    /**
+     * Classes nested in an ignored class are also kept from the APK so their types match the APK class using them.
+     */
+    static boolean shouldFastLoadClass(Class<?> loadedClass) {
+        for (Class<?> checkedClass = loadedClass; checkedClass != null; checkedClass = checkedClass.getEnclosingClass()) {
+            for (Annotation annotation : checkedClass.getAnnotations()) {
+                for (String ignored : IGNORED_ANNOTATIONS) {
+                    if (annotation.annotationType().getName().contains(ignored)) {
+                        return false;
+                    }
                 }
             }
         }

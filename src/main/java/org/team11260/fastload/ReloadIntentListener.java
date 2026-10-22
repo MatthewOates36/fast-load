@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -86,8 +87,21 @@ public class ReloadIntentListener {
 
                 @Override
                 public Collection<String> getOnBotJavaClassNames() {
-                    // list of classes so new or renamed classes will be scanned
-                    return Collections.list(dexFile.entries());
+                    // list of classes so new or renamed classes will be scanned, skipping classes kept from
+                    // the APK since they are already scanned from the APK and would otherwise be registered twice
+                    ClassLoader apkClassLoader = ReloadIntentListener.class.getClassLoader();
+                    List<String> classNames = new ArrayList<>();
+                    for (String className : Collections.list(dexFile.entries())) {
+                        try {
+                            if (!TeamCodeClassLoader.shouldFastLoadClass(apkClassLoader.loadClass(className))) {
+                                continue;
+                            }
+                        } catch (ClassNotFoundException | LinkageError ignored) {
+                            // class is new in the fast load or fails to load, let the ClassManager handle it
+                        }
+                        classNames.add(className);
+                    }
+                    return classNames;
                 }
 
                 @Override
