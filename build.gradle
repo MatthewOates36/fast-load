@@ -8,21 +8,21 @@ group = 'org.team11260'
 version = '0.1.4-beta1'
 
 android {
-    compileSdkVersion 33
+    compileSdk = 33
 
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 28
+        minSdk = 24
+        targetSdk = 28
     }
 
-    lintOptions {
-        abortOnError false
+    lint {
+        abortOnError = false
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
-    namespace 'org.team11260.fastload'
+    namespace = 'org.team11260.fastload'
 
     publishing {
         singleVariant("release") {
@@ -37,8 +37,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.firstinspires.ftc:FtcCommon:[11.0, 12.0)'
-    implementation 'org.firstinspires.ftc:RobotCore:[11.0, 12.0)'
+    compileOnly 'org.firstinspires.ftc:FtcCommon:12.0.0'
+    compileOnly 'org.firstinspires.ftc:RobotCore:12.0.0'
 }
 
 afterEvaluate {
